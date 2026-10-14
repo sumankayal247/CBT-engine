@@ -1,0 +1,606 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "schemaVersion": {
+      "type": "string",
+      "const": "1.0"
+    },
+    "examId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 100,
+      "pattern": "^(?!(?:__proto__|constructor|prototype)$)[a-zA-Z0-9_-]+$"
+    },
+    "examName": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200
+    },
+    "examCode": {
+      "type": "string",
+      "maxLength": 80
+    },
+    "examProfile": {
+      "type": "string",
+      "enum": [
+        "ncbt-style",
+        "railway",
+        "jee-style",
+        "gate-style",
+        "nta-style",
+        "generic",
+        "custom"
+      ]
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 5000
+    },
+    "language": {
+      "type": "string",
+      "minLength": 2,
+      "maxLength": 20
+    },
+    "durationSeconds": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 604800
+    },
+    "totalMarks": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1000000
+    },
+    "passCriteria": {
+      "type": "object",
+      "properties": {
+        "minimumMarks": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1000000
+        },
+        "minimumPercentage": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "requireAllSectionMinimums": {
+          "default": false,
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "requireAllSectionMinimums"
+      ],
+      "additionalProperties": false
+    },
+    "settings": {
+      "default": {
+        "allowSectionNavigation": true,
+        "shuffleQuestions": false,
+        "shuffleOptions": false,
+        "allowCalculator": false,
+        "showSolutionsAfterSubmit": true,
+        "autosave": true,
+        "autoSubmitOnTimeExpiry": true,
+        "scorePrecision": 2,
+        "warningSeconds": [
+          300,
+          60
+        ]
+      },
+      "type": "object",
+      "properties": {
+        "allowSectionNavigation": {
+          "default": true,
+          "type": "boolean"
+        },
+        "shuffleQuestions": {
+          "default": false,
+          "type": "boolean"
+        },
+        "shuffleOptions": {
+          "default": false,
+          "type": "boolean"
+        },
+        "allowCalculator": {
+          "default": false,
+          "type": "boolean"
+        },
+        "showSolutionsAfterSubmit": {
+          "default": true,
+          "type": "boolean"
+        },
+        "autosave": {
+          "default": true,
+          "type": "boolean",
+          "const": true
+        },
+        "autoSubmitOnTimeExpiry": {
+          "default": true,
+          "type": "boolean",
+          "const": true
+        },
+        "sectionExpiry": {
+          "type": "string",
+          "enum": [
+            "lock",
+            "advance"
+          ]
+        },
+        "allowQuestionNavigation": {
+          "type": "boolean"
+        },
+        "allowPrevious": {
+          "type": "boolean"
+        },
+        "allowReview": {
+          "type": "boolean"
+        },
+        "scorePrecision": {
+          "default": 2,
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 8
+        },
+        "warningSeconds": {
+          "default": [
+            300,
+            60
+          ],
+          "maxItems": 10,
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "exclusiveMinimum": 0,
+            "maximum": 604800
+          }
+        },
+        "presentation": {
+          "type": "object",
+          "properties": {
+            "palettePosition": {
+              "type": "string",
+              "enum": [
+                "left",
+                "right"
+              ]
+            },
+            "accent": {
+              "type": "string",
+              "pattern": "^#[0-9a-fA-F]{6}$"
+            },
+            "showCandidate": {
+              "type": "boolean"
+            },
+            "compactOptions": {
+              "type": "boolean"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "allowSectionNavigation",
+        "shuffleQuestions",
+        "shuffleOptions",
+        "allowCalculator",
+        "showSolutionsAfterSubmit",
+        "autosave",
+        "autoSubmitOnTimeExpiry",
+        "scorePrecision",
+        "warningSeconds"
+      ],
+      "additionalProperties": false
+    },
+    "sections": {
+      "minItems": 1,
+      "maxItems": 50,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100,
+            "pattern": "^(?!(?:__proto__|constructor|prototype)$)[a-zA-Z0-9_-]+$"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "order": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "durationSeconds": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 604800
+          },
+          "minimumMarksToPass": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1000000
+          },
+          "minimumPercentageToPass": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 100
+          },
+          "settings": {
+            "type": "object",
+            "properties": {
+              "allowQuestionNavigation": {
+                "type": "boolean"
+              },
+              "allowPrevious": {
+                "type": "boolean"
+              },
+              "allowReview": {
+                "type": "boolean"
+              }
+            },
+            "additionalProperties": false
+          },
+          "questions": {
+            "minItems": 1,
+            "maxItems": 1000,
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 100,
+                      "pattern": "^(?!(?:__proto__|constructor|prototype)$)[a-zA-Z0-9_-]+$"
+                    },
+                    "questionText": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 50000
+                    },
+                    "marks": {
+                      "type": "number",
+                      "exclusiveMinimum": 0,
+                      "maximum": 1000000
+                    },
+                    "negativeMarks": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1000000
+                    },
+                    "explanation": {
+                      "type": "string",
+                      "maxLength": 50000
+                    },
+                    "image": {
+                      "type": "object",
+                      "properties": {
+                        "src": {
+                          "type": "string",
+                          "maxLength": 2000000,
+                          "pattern": "^data:image\\/(png|jpeg|webp);base64,[A-Za-z0-9+/]+={0,2}$"
+                        },
+                        "alt": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 500
+                        }
+                      },
+                      "required": [
+                        "src",
+                        "alt"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "type": {
+                      "type": "string",
+                      "const": "single-choice"
+                    },
+                    "options": {
+                      "minItems": 2,
+                      "maxItems": 20,
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 100,
+                            "pattern": "^(?!(?:__proto__|constructor|prototype)$)[a-zA-Z0-9_-]+$"
+                          },
+                          "text": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 50000
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "text"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "correctOptionIds": {
+                      "minItems": 1,
+                      "maxItems": 1,
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 100,
+                        "pattern": "^(?!(?:__proto__|constructor|prototype)$)[a-zA-Z0-9_-]+$"
+                      }
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "questionText",
+                    "marks",
+                    "negativeMarks",
+                    "type",
+                    "options",
+                    "correctOptionIds"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 100,
+                      "pattern": "^(?!(?:__proto__|constructor|prototype)$)[a-zA-Z0-9_-]+$"
+                    },
+                    "questionText": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 50000
+                    },
+                    "marks": {
+                      "type": "number",
+                      "exclusiveMinimum": 0,
+                      "maximum": 1000000
+                    },
+                    "negativeMarks": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1000000
+                    },
+                    "explanation": {
+                      "type": "string",
+                      "maxLength": 50000
+                    },
+                    "image": {
+                      "type": "object",
+                      "properties": {
+                        "src": {
+                          "type": "string",
+                          "maxLength": 2000000,
+                          "pattern": "^data:image\\/(png|jpeg|webp);base64,[A-Za-z0-9+/]+={0,2}$"
+                        },
+                        "alt": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 500
+                        }
+                      },
+                      "required": [
+                        "src",
+                        "alt"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "type": {
+                      "type": "string",
+                      "const": "multiple-select"
+                    },
+                    "options": {
+                      "minItems": 2,
+                      "maxItems": 20,
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 100,
+                            "pattern": "^(?!(?:__proto__|constructor|prototype)$)[a-zA-Z0-9_-]+$"
+                          },
+                          "text": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 50000
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "text"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "correctOptionIds": {
+                      "minItems": 1,
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 100,
+                        "pattern": "^(?!(?:__proto__|constructor|prototype)$)[a-zA-Z0-9_-]+$"
+                      }
+                    },
+                    "scoring": {
+                      "oneOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "mode": {
+                              "type": "string",
+                              "const": "exact"
+                            }
+                          },
+                          "required": [
+                            "mode"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "mode": {
+                              "type": "string",
+                              "const": "partial"
+                            },
+                            "perCorrectOption": {
+                              "type": "number",
+                              "exclusiveMinimum": 0,
+                              "maximum": 1000000
+                            },
+                            "incorrectSelectionPenalty": {
+                              "type": "number",
+                              "minimum": 0,
+                              "maximum": 1000000
+                            }
+                          },
+                          "required": [
+                            "mode",
+                            "perCorrectOption",
+                            "incorrectSelectionPenalty"
+                          ],
+                          "additionalProperties": false
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "questionText",
+                    "marks",
+                    "negativeMarks",
+                    "type",
+                    "options",
+                    "correctOptionIds",
+                    "scoring"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 100,
+                      "pattern": "^(?!(?:__proto__|constructor|prototype)$)[a-zA-Z0-9_-]+$"
+                    },
+                    "questionText": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 50000
+                    },
+                    "marks": {
+                      "type": "number",
+                      "exclusiveMinimum": 0,
+                      "maximum": 1000000
+                    },
+                    "negativeMarks": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1000000
+                    },
+                    "explanation": {
+                      "type": "string",
+                      "maxLength": 50000
+                    },
+                    "image": {
+                      "type": "object",
+                      "properties": {
+                        "src": {
+                          "type": "string",
+                          "maxLength": 2000000,
+                          "pattern": "^data:image\\/(png|jpeg|webp);base64,[A-Za-z0-9+/]+={0,2}$"
+                        },
+                        "alt": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 500
+                        }
+                      },
+                      "required": [
+                        "src",
+                        "alt"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "type": {
+                      "type": "string",
+                      "const": "numerical"
+                    },
+                    "correctAnswer": {
+                      "type": "number"
+                    },
+                    "absoluteTolerance": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1000000
+                    },
+                    "relativeTolerance": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    },
+                    "decimalPrecision": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 12
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "questionText",
+                    "marks",
+                    "negativeMarks",
+                    "type",
+                    "correctAnswer"
+                  ],
+                  "additionalProperties": false
+                }
+              ]
+            }
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "order",
+          "questions"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "examName",
+    "examProfile",
+    "language",
+    "durationSeconds",
+    "passCriteria",
+    "settings",
+    "sections"
+  ],
+  "additionalProperties": false
+}
