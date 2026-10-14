@@ -332,7 +332,7 @@ export default function App() {
   };
   async function loadExample() {
     try {
-      const response = await fetch('/examples/demo-engineering.json');
+      const response = await fetch(`${import.meta.env.BASE_URL}examples/demo-engineering.json`);
       if (!response.ok)
         throw new Error('Example unavailable. Download or import your own JSON file.');
       const parsed = parseExam(await response.text());
@@ -660,7 +660,7 @@ export default function App() {
             Keyboard: Tab to move between controls, Space or Enter to activate, and arrow keys in
             radio groups. No global shortcuts interfere with answer entry.
           </p>
-          <a href="/FORMAT.md" target="_blank" rel="noreferrer">
+          <a href={`${import.meta.env.BASE_URL}FORMAT.md`} target="_blank" rel="noreferrer">
             Read the JSON format guide
           </a>
           <p className="text-secondary mt-3 mb-0">

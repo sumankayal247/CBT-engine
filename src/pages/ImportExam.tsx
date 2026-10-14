@@ -82,7 +82,12 @@ export function ImportExam({
           <h1>{existing ? 'Inspect & configure' : 'Import an examination'}</h1>
           <p>A validated paper, ready for a real examination workflow.</p>
         </div>
-        <a href="/FORMAT.md" target="_blank" rel="noreferrer" className="btn btn-outline-secondary">
+        <a
+          href={`${import.meta.env.BASE_URL}FORMAT.md`}
+          target="_blank"
+          rel="noreferrer"
+          className="btn btn-outline-secondary"
+        >
           JSON format guide <ArrowRight size={15} />
         </a>
       </div>
@@ -118,7 +123,11 @@ export function ImportExam({
               />
             </div>
             <div className="d-flex justify-content-between flex-wrap gap-2 mt-3">
-              <a href="/examples/demo-engineering.json" download className="small-link">
+              <a
+                href={`${import.meta.env.BASE_URL}examples/demo-engineering.json`}
+                download
+                className="small-link"
+              >
                 <ArrowDownToLine size={15} /> Download example
               </a>
               <button className="btn text-button p-0" onClick={() => setEditor(!editor)}>
