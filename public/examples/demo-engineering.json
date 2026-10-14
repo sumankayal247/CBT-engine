@@ -1,0 +1,115 @@
+{
+  "schemaVersion": "1.0",
+  "examId": "demo-engineering",
+  "examName": "Engineering Aptitude · Practice Set",
+  "examCode": "DEMO-01",
+  "examProfile": "gate-style",
+  "description": "A short demonstration of objective, multiple-select and numerical questions. This is not an official GATE paper or marking scheme.",
+  "language": "en",
+  "durationSeconds": 1200,
+  "totalMarks": 10,
+  "passCriteria": { "minimumMarks": 5, "requireAllSectionMinimums": true },
+  "settings": {
+    "allowSectionNavigation": true,
+    "shuffleQuestions": false,
+    "shuffleOptions": false,
+    "allowCalculator": true,
+    "showSolutionsAfterSubmit": true,
+    "autosave": true,
+    "autoSubmitOnTimeExpiry": true,
+    "sectionExpiry": "advance"
+  },
+  "sections": [
+    {
+      "id": "aptitude",
+      "title": "General Aptitude",
+      "order": 1,
+      "durationSeconds": 600,
+      "minimumMarksToPass": 2,
+      "questions": [
+        {
+          "id": "q1",
+          "type": "single-choice",
+          "questionText": "A train covers 180 km in 3 hours. What is its average speed?",
+          "marks": 2,
+          "negativeMarks": 0.5,
+          "options": [
+            { "id": "A", "text": "45 km/h" },
+            { "id": "B", "text": "60 km/h" },
+            { "id": "C", "text": "90 km/h" },
+            { "id": "D", "text": "120 km/h" }
+          ],
+          "correctOptionIds": ["B"],
+          "explanation": "Average speed = distance ÷ time = 180 ÷ 3 = 60 km/h."
+        },
+        {
+          "id": "q2",
+          "type": "multiple-select",
+          "questionText": "Select all the prime numbers below.",
+          "marks": 2,
+          "negativeMarks": 0.5,
+          "options": [
+            { "id": "A", "text": "2" },
+            { "id": "B", "text": "9" },
+            { "id": "C", "text": "17" },
+            { "id": "D", "text": "21" }
+          ],
+          "correctOptionIds": ["A", "C"],
+          "scoring": { "mode": "partial", "perCorrectOption": 1, "incorrectSelectionPenalty": 1 },
+          "explanation": "2 and 17 are prime. Partial credit is explicitly configured for this demonstration."
+        }
+      ]
+    },
+    {
+      "id": "mathematics",
+      "title": "Engineering Mathematics",
+      "order": 2,
+      "durationSeconds": 600,
+      "minimumMarksToPass": 2,
+      "questions": [
+        {
+          "id": "q3",
+          "type": "single-choice",
+          "questionText": "If $f(x)=x^2$, which expression is $f'(x)$?",
+          "marks": 2,
+          "negativeMarks": 0.5,
+          "options": [
+            { "id": "A", "text": "$x$" },
+            { "id": "B", "text": "$2x$" },
+            { "id": "C", "text": "$x^2$" },
+            { "id": "D", "text": "$2$" }
+          ],
+          "correctOptionIds": ["B"],
+          "explanation": "By the power rule, $\\frac{d}{dx}x^n = nx^{n-1}$."
+        },
+        {
+          "id": "q4",
+          "type": "numerical",
+          "questionText": "Evaluate $\\sqrt{2}$, rounded to two decimal places.",
+          "marks": 2,
+          "negativeMarks": 0,
+          "correctAnswer": 1.41,
+          "absoluteTolerance": 0.005,
+          "decimalPrecision": 2,
+          "explanation": "$\\sqrt{2} \\approx 1.4142$, which rounds to 1.41."
+        },
+        {
+          "id": "q5",
+          "type": "multiple-select",
+          "questionText": "Which of the following functions are even? Select all that apply.",
+          "marks": 2,
+          "negativeMarks": 0,
+          "options": [
+            { "id": "A", "text": "$x^2$" },
+            { "id": "B", "text": "$x^3$" },
+            { "id": "C", "text": "$\\cos(x)$" },
+            { "id": "D", "text": "$\\sin(x)$" }
+          ],
+          "correctOptionIds": ["A", "C"],
+          "scoring": { "mode": "exact" },
+          "explanation": "An even function satisfies $f(-x)=f(x)$. Both $x^2$ and $\\cos(x)$ meet this condition."
+        }
+      ]
+    }
+  ]
+}

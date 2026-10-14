@@ -1,0 +1,87 @@
+{
+  "schemaVersion": "1.0",
+  "examId": "railway-practice",
+  "examName": "Railway Aptitude \u00b7 Practice Set",
+  "examCode": "RRB-DEMO",
+  "examProfile": "railway",
+  "description": "A configurable Railway-style practice example, not an official paper or marking scheme.",
+  "language": "en",
+  "durationSeconds": 600,
+  "totalMarks": 4,
+  "passCriteria": {
+    "minimumMarks": 2,
+    "requireAllSectionMinimums": false
+  },
+  "settings": {
+    "allowSectionNavigation": true,
+    "shuffleQuestions": false,
+    "shuffleOptions": false,
+    "allowCalculator": false,
+    "showSolutionsAfterSubmit": true,
+    "autosave": true,
+    "autoSubmitOnTimeExpiry": true
+  },
+  "sections": [
+    {
+      "id": "aptitude",
+      "title": "General Aptitude",
+      "order": 1,
+      "questions": [
+        {
+          "id": "q1",
+          "type": "single-choice",
+          "questionText": "A train covers 180 km in 3 hours. What is its average speed?",
+          "marks": 2,
+          "negativeMarks": 0.5,
+          "options": [
+            {
+              "id": "A",
+              "text": "45 km/h"
+            },
+            {
+              "id": "B",
+              "text": "60 km/h"
+            },
+            {
+              "id": "C",
+              "text": "90 km/h"
+            },
+            {
+              "id": "D",
+              "text": "120 km/h"
+            }
+          ],
+          "correctOptionIds": ["B"],
+          "explanation": "Average speed = distance \u00f7 time = 180 \u00f7 3 = 60 km/h."
+        },
+        {
+          "id": "q2",
+          "type": "single-choice",
+          "questionText": "Which number is prime?",
+          "marks": 2,
+          "negativeMarks": 0.5,
+          "options": [
+            {
+              "id": "A",
+              "text": "9"
+            },
+            {
+              "id": "B",
+              "text": "15"
+            },
+            {
+              "id": "C",
+              "text": "17"
+            },
+            {
+              "id": "D",
+              "text": "21"
+            }
+          ],
+          "correctOptionIds": ["C"],
+          "explanation": "17 has exactly two positive divisors."
+        }
+      ]
+    }
+  ]
+}
