@@ -24,7 +24,7 @@ npm run build
 npm run preview -- --port 4173
 ```
 
-Deploy the contents of `dist/` to an HTTPS static host at the domain root. No server secrets or environment variables are required. `localhost` is also a secure context for testing. HTTPS is required for service-worker/PWA functionality in many browsers.
+Deploy the contents of `dist/` to an HTTPS static host at the domain root. The GitHub Pages demo at `/CBT-engine/` is different: `.github/workflows/pages.yml` builds it with `DEPLOY_BASE=/CBT-engine/` and publishes the artifact, so the repository's Pages source must be set to **GitHub Actions**. No server secrets or environment variables are required. `localhost` is also a secure context for testing. HTTPS is required for service-worker/PWA functionality in many browsers.
 
 ### Browser end-to-end tests
 
