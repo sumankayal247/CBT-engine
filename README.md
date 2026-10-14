@@ -1,6 +1,8 @@
 # ExamDesk — Indian Competitive CBT Engine
 
-An offline-first, configurable examination practice application. **One engine, configurable exams.** React + TypeScript, Vite, Bootstrap 5, IndexedDB (`idb`), Zod and locally bundled KaTeX. No backend, accounts, analytics, paid APIs or external content services.
+Live demo: https://sumankayal247.github.io/CBT-engine/
+
+An offline-first, configurable examination practice application. **One engine, configurable exams.** React + TypeScript, Vite, Bootstrap 5, IndexedDB (`idb`), Zod and locally bundled KaTeX. No backend is needed.
 
 > Practice simulator only. Presets are editable approximations of common CBT workflows, not official portals, official marking rules or official results. No official identity assets are included.
 
@@ -22,7 +24,7 @@ npm run build
 npm run preview -- --port 4173
 ```
 
-Deploy the contents of `dist/` to an HTTPS static host at the domain root. No server secrets or environment variables are required. `localhost` is also a secure context for testing. HTTPS is required for service workers, durable browser APIs and the single-writer Web Lock. For deployment below a subpath, update Vite base, manifest scope/start URL and root-relative public links first.
+Deploy the contents of `dist/` to an HTTPS static host at the domain root. No server secrets or environment variables are required. `localhost` is also a secure context for testing. HTTPS is required for service-worker/PWA functionality in many browsers.
 
 ### Browser end-to-end tests
 
@@ -34,17 +36,15 @@ npm run preview -- --port 4173
 npm run test:e2e
 ```
 
-Tests run against the **production** build, including its service worker. A development-only `@sparticuz/chromium` binary is installed through npm for Linux environments without a system browser. On other operating systems, install Playwright Chromium (`npx playwright install chromium`) and set `PLAYWRIGHT_EXECUTABLE_PATH` to the installed browser executable. `E2E_BASE_URL` can target another running production preview. Local tests do not start or stop your server. In CI, Playwright starts the production preview automatically.
-
-The suite covers import and missing pass-criterion setup, all question types, navigation, review/clear, refresh recovery, final scoring, repeat history, invalid JSON and answer keys, section and overall timeout, offline reload, mobile behavior, storage-failure retry, backup restore, single-writer tab locking and automated WCAG A/AA checks. Unit/persistence tests additionally cover scoring edges, partial credit, tolerances, pass thresholds, randomness, database upgrades and idempotent finalization. No generated test output is committed.
+Tests run against the **production** build, including its service worker. A development-only `@sparticuz/chromium` binary is installed through npm for Linux environments without a system browser. The suite covers import and missing pass-criterion setup, all question types, navigation, review/clear, refresh recovery, final scoring, repeat history, invalid JSON and answer keys, section and overall timers, and user-facing error flows.
 
 ## Use the application
 
 1. **Import examination**: choose/drop JSON or paste it into the editor. An actual library record is created only after validation and Save. Nothing is prepopulated with fake exams or scores.
-2. Download [`public/examples/demo-engineering.json`](public/examples/demo-engineering.json), or select **Try the demo paper** to import it explicitly. It contains single choice, multiple select and numerical questions. A separate [Railway-style sample](public/examples/railway-practice.json) demonstrates untimed sections. Neither sample claims an official scheme.
-3. Review validation errors and warnings. Configure missing duration/pass/timed-section rules, choose a profile and edit supported settings. Section timer/qualification/navigation fields are editable in the setup form; the in-app JSON editor handles question-level configuration without modifying source code.
+2. Download [`public/examples/demo-engineering.json`](public/examples/demo-engineering.json), or select **Try the demo paper** to import it explicitly. It contains single choice, multiple select and numeric questions plus instructions and answer review behaviour.
+3. Review validation errors and warnings. Configure missing duration/pass/timed-section rules, choose a profile and edit supported settings. Section timer/qualification/navigation fields are editable when allowed by the profile.
 4. Start a paper from the library, read its instructions, enter a candidate name, acknowledge and click **Start Examination**. Only this click starts the timer.
-5. Responses save immediately to IndexedDB. Use Previous, Save & Next, review flags, Clear Response and the question palette. Profile/section rules determine available navigation. Timers are absolute deadlines, not decrementing counters.
+5. Responses save immediately to IndexedDB. Use Previous, Save & Next, review flags, Clear Response and the question palette. Profile/section rules determine available navigation. Timers are absolute and resume on page reloads.
 6. Submit after confirmation, or let the timer submit. Results include section qualification, actual elapsed time (separate from completion timestamp), accuracy and configurable answer review.
 7. Reopen the **Scoreboard** to search/filter/sort, review records, see historical trends or export CSV/full attempt JSON. Repeating, replacing or removing a paper never erases old attempt snapshots.
 8. **Settings & data** exports/restores a full validated backup. Local data belongs to this browser profile and origin; clearing it can permanently remove everything.
@@ -69,7 +69,7 @@ See the complete [format reference](public/FORMAT.md) and [JSON Schema](public/e
 npm run schema
 ```
 
-Required exam semantics are never inferred: answer keys, marks, negative marking, overall time, a pass threshold and explicit expiry behavior for timed sections. `autosave` and `autoSubmitOnTimeExpiry` must be true. Rich HTML, remote URLs, arbitrary partial-credit formulas, alternative unanswered penalties, optional-question quotas and per-question timers are not v1.0 features; unknown fields are rejected rather than silently ignored. Model such requirements in a future schema version with explicit engine support.
+Required exam semantics are never inferred: answer keys, marks, negative marking, overall time, a pass threshold and explicit expiry behavior for timed sections. `autosave` and `autoSubmitOnTimeExpiry` are among the configuration values that require explicit handling.
 
 ## Architecture
 
@@ -90,16 +90,16 @@ src/**/*.test.*           Unit, persistence and component safety tests
 tests/                    Production-browser integration tests
 ```
 
-Database `examdesk-local`, version 2: `exams`, `attempts` (index `by-status`), `settings`. Upgrading v1 adds the status index without deleting records. Finalization writes one attempt record in a read/write transaction; late active writes cannot overwrite a completed result. Revisions protect against stale updates. One Web Lock per origin prevents concurrent workspace writers in supported browsers; storage also prevents multiple active attempts.
+Database `examdesk-local`, version 2: `exams`, `attempts` (index `by-status`), `settings`. Upgrading v1 adds the status index without deleting records. Finalization writes one attempt record in a single transaction and records several snapshots for results and score review.
 
 ## Offline and reliability boundaries
 
-- Service workers are enabled in the **production build**, not Vite dev. Load online once, wait for caching, then reopen on the same origin/browser. Updates wait for old application sessions to close; no forced reload during an exam.
-- No browser can run application code while closed or indefinitely suspended. On return, overdue attempts finalize immediately using their original effective deadline. No time is reset; closed-browser submission is not claimed to execute in real time.
-- An offline simulator trusts the device clock. It cannot provide tamper-proof time, secure answer-key secrecy or proctoring. Active views do not render keys; local JSON, database snapshots and full exports contain them. `showSolutionsAfterSubmit` controls UI disclosure only.
-- IndexedDB is transactional, but sudden process/device failure before a write finishes can lose the latest in-flight change. The UI reports saving/saved/error, retries a failed save without discarding in-memory answers and warns before unloading unsaved data. Do not close a tab reporting save failure.
-- Backups are plain JSON and may contain sensitive candidate/question data. Store them appropriately. Restore never overwrites an existing ID and skips archived active attempts. Export attempt JSON is archival; only the full backup envelope is restorable.
-- Optional PWA installation depends on the browser; offline caching works without installation. Safari/private mode and browser eviction policies can limit storage. Request persistent storage and retain external backups.
+- Service workers are enabled in the **production build**, not Vite dev. Load online once, wait for caching, then reopen on the same origin/browser. Updates wait for old application sessions to close before a new one is activated.
+- No browser can run application code while closed or indefinitely suspended. On return, overdue attempts finalize immediately using their original effective deadline. No time is reset; closed-browser attempts cannot be re-opened without any new scheduler state.
+- An offline simulator trusts the device clock. It cannot provide tamper-proof time, secure answer-key secrecy or proctoring. Active views do not render keys; local JSON, database snapshots and full export records can preserve them.
+- IndexedDB is transactional, but sudden process/device failure before a write finishes can lose the latest in-flight change. The UI reports saving/saved/error, retries a failed save without discarding prior known-good state, and keeps a backup manifest for recovery.
+- Backups are plain JSON and may contain sensitive candidate/question data. Store them appropriately. Restore never overwrites an existing ID and skips archived active attempts. Export attempt JSON is sanitized for history and review.
+- Optional PWA installation depends on the browser; offline caching works without installation. Safari/private mode and browser eviction policies can limit storage. Request persistent storage and keep enough space for local data.
 
 ## License
 
